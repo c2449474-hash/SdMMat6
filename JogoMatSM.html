@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show do Milhão: Desafio das Frações - 6º Ano</title>
+    <style>
+        :root {
+            --primary: #1a237e;
+            --secondary: #ffc107;
+            --accent: #e53935;
+            --light: #f5f5f5;
+            --dark: #212121;
+            --correct: #4caf50;
+            --wrong: #f44336;
+            --help: #2196f3;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary), #283593);
+            color: var(--light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: var(--secondary);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .score-board {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .question-container {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--dark);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            text-align: center;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .option {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--dark);
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 1.1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .option:hover {
+            background: var(--secondary);
+            color: var(--dark);
+            transform: translateY(-3px);
+        }
+        
+        .option.eliminated {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: scale(0.95);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-primary {
+            background: var(--secondary);
+            color: var(--dark);
+        }
+        
+        .btn-primary:hover {
+            background: #ffb300;
+            transform: translateY(-3px);
+        }
+        
+        .btn-secondary {
+            background: #9e9e9e;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #757575;
+            transform: translateY(-3px);
+        }
+        
+        .btn-danger {
+            background: var(--accent);
+            color: white;
+            width: 100%;
+        }
+        
+        .btn-danger:hover {
+            background: #c62828;
+            transform: translateY(-3px);
+        }
+        
+        .btn-god {
+            background: linear-gradient(45deg, #ff0080, #ff8c00);
+            color: white;
+            margin-top: 10px;
+            width: 100%;
+        }
+        
+        .btn-god:hover {
+            background: linear-gradient(45deg, #e60073, #f57c00);
+            transform: translateY(-3px);
+        }
+        
+        .btn-start {
+            background: linear-gradient(45deg, #00c853, #64dd17);
+            color: white;
+            font-size: 1.2rem;
+            padding: 15px 40px;
+            margin: 20px 0;
+        }
+        
+        .btn-start:hover {
+            background: linear-gradient(45deg, #009624, #4caf00);
+            transform: translateY(-3px);
+        }
+        
+        .lifelines {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .lifeline {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .lifeline:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+        
+        .lifeline-count {
+            font-size: 0.8rem;
+            margin-top: 5px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        
+        .disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .disabled:hover {
+            transform: none;
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .god-mode-active {
+            box-shadow: 0 0 15px #ff0080;
+            animation: godModeGlow 2s infinite;
+        }
+        
+        @keyframes godModeGlow {
+            0% { box-shadow: 0 0 10px #ff0080; }
+            50% { box-shadow: 0 0 20px #ff0080, 0 0 30px #ff8c00; }
+            100% { box-shadow: 0 0 10px #ff0080; }
+        }
+        
+        .welcome-screen {
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .welcome-screen h2 {
+            color: var(--secondary);
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        
+        .welcome-screen p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+        
+        .instructions {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .instructions h3 {
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+        
+        .instructions ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .instructions li:before {
+            content: "•";
+            color: var(--secondary);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            color: var(--dark);
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+        
+        .modal h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .modal p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .prizes {
+            margin: 20px 0;
+            background: rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .prize {
+            padding: 8px;
+            border-radius: 5px;
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .prize.current {
+            background: var(--secondary);
+            color: var(--dark);
+            font-weight: bold;
+        }
+        
+        .prize.reached {
+            background: var(--correct);
+            color: white;
+        }
+        
+        .game-screen {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .options-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .lifelines {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Tela de Início -->
+        <div class="welcome-screen" id="welcome-screen">
+            <header>
+                <h1>Show do Milhão</h1>
+                <div class="subtitle">Desafio das Frações</div>
+            </header>
+            
+            <div class="instructions">
+                <h3>Como Jogar:</h3>
+                <ul>
+                    <li>Você responderá 30 questões sobre frações</li>
+                    <li>Cada resposta correta aumenta seu prêmio</li>
+                    <li>Use as ajudas estrategicamente:</li>
+                    <ul>
+                        <li><strong>Pular</strong>: Pula a pergunta atual (3 usos)</li>
+                        <li><strong>Consultar Caderno</strong>: Mostra uma dica (5 usos)</li>
+                        <li><strong>Professor Ajuda</strong>: Explica como resolver (3 usos)</li>
+                        <li><strong>Eliminar Alternativas</strong>: Remove 1 ou 2 opções erradas (5 usos)</li>
+                    </ul>
+                </ul>
+            </div>
+            
+            <button class="btn btn-start" onclick="startGame()">Iniciar Jogo</button>
+        </div>
+        
+        <!-- Tela do Jogo -->
+        <div class="game-screen" id="game-screen">
+            <header>
+                <h1>Show do Milhão</h1>
+                <div class="subtitle">Desafio das Frações</div>
+            </header>
+            
+            <div class="score-board">
+                <div>Questão: <span id="question-number">1</span>/30</div>
+                <div>Prêmio: R$ <span id="current-prize">1.000</span></div>
+            </div>
+            
+            <div class="question-container">
+                <div id="question">Carregando pergunta...</div>
+            </div>
+            
+            <div class="options-container">
+                <div class="option" onclick="checkAnswer(0)">A) <span id="option0"></span></div>
+                <div class="option" onclick="checkAnswer(1)">B) <span id="option1"></span></div>
+                <div class="option" onclick="checkAnswer(2)">C) <span id="option2"></span></div>
+                <div class="option" onclick="checkAnswer(3)">D) <span id="option3"></span></div>
+            </div>
+            
+            <div class="lifelines">
+                <div class="lifeline" onclick="useLifeline('skip')">
+                    <div>Pular</div>
+                    <div class="lifeline-count" id="skip-count">3/3</div>
+                </div>
+                <div class="lifeline" onclick="useLifeline('notebook')">
+                    <div>Consultar Caderno</div>
+                    <div class="lifeline-count" id="notebook-count">5/5</div>
+                </div>
+                <div class="lifeline" onclick="useLifeline('teacher')">
+                    <div>Professor Ajuda</div>
+                    <div class="lifeline-count" id="teacher-count">3/3</div>
+                </div>
+                <div class="lifeline" onclick="useLifeline('eliminate')">
+                    <div>Eliminar Alternativas</div>
+                    <div class="lifeline-count" id="eliminate-count">5/5</div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button class="btn btn-danger" onclick="surrender()">Desistir do Jogo</button>
+            </div>
+            
+            <button class="btn btn-god" id="god-mode-btn" onclick="toggleGodMode()">God Mode</button>
+        </div>
+    </div>
+    
+    <div class="modal" id="notebook-modal">
+        <div class="modal-content">
+            <h2>Consultando o Caderno...</h2>
+            <div id="notebook-content">
+                <p id="notebook-tip">Carregando dica...</p>
+            </div>
+            <button class="btn btn-primary" onclick="closeModal('notebook-modal')">Fechar</button>
+        </div>
+    </div>
+    
+    <div class="modal" id="teacher-modal">
+        <div class="modal-content">
+            <h2>Professor Ajuda</h2>
+            <div id="teacher-content">
+                <p id="teacher-explanation">Carregando explicação...</p>
+            </div>
+            <button class="btn btn-primary" onclick="closeModal('teacher-modal')">Fechar</button>
+        </div>
+    </div>
+    
+    <div class="modal" id="result-modal">
+        <div class="modal-content">
+            <h2 id="result-title">Resultado</h2>
+            <p id="result-message"></p>
+            <button class="btn btn-primary" id="result-button" onclick="closeModal('result-modal')">Continuar</button>
+        </div>
+    </div>
+
+    <script>
+        // Variáveis do jogo
+        let currentQuestion = 0;
+        let score = 0;
+        let usedSkips = 0;
+        let maxSkips = 3;
+        let usedNotebook = 0;
+        let maxNotebook = 5;
+        let usedTeacher = 0;
+        let maxTeacher = 3;
+        let usedEliminate = 0;
+        let maxEliminate = 5;
+        let godMode = false;
+        let questions = [];
+        let eliminatedOptions = [];
+        
+        // Premiação
+        const prizes = [
+            100, 200, 300, 500, 700, 1000, 1500, 2500, 5000, 10000,
+            20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 
+            100000, 150000, 200000, 250000, 300000, 350000, 400000, 
+            450000, 500000, 550000, 600000, 1000000
+        ];
+        
+        // Dicas para o caderno (relacionadas às perguntas)
+        const notebookTips = [
+            "Uma fração representa partes de um todo. Ex: 3/4 significa 3 partes de 4.",
+            "Frações equivalentes representam o mesmo valor. Ex: 1/2 = 2/4 = 3/6.",
+            "Para comparar frações com denominadores diferentes, encontre um denominador comum.",
+            "Para somar ou subtrair frações, elas precisam ter o mesmo denominador.",
+            "Para multiplicar frações, multiplique os numeradores e os denominadores.",
+            "Para dividir frações, multiplique pela inversa da segunda fração.",
+            "Para calcular a fração de um número, multiplique o número pelo numerador e divida pelo denominador.",
+            "Um quociente é o resultado de uma divisão. A fração a/b representa o quociente de a por b.",
+            "Quanto maior o denominador, menor cada parte se o numerador for igual.",
+            "Frações impróprias (numerador maior que denominador) podem ser convertidas em números mistos.",
+            "Para encontrar frações equivalentes, multiplique ou divida o numerador e o denominador pelo mesmo número.",
+            "Ao comparar frações com o mesmo numerador, a maior é a que tem o menor denominador.",
+            "A fração de um número natural é calculada multiplicando o número pelo numerador e dividindo pelo denominador.",
+            "Na adição de frações com denominadores diferentes, o MMC é útil para encontrar o denominador comum.",
+            "Na multiplicação de frações, você pode simplificar antes de multiplicar, cruzando numeradores e denominadores.",
+            "Para dividir frações, mantenha a primeira fração, inverta a segunda e multiplique.",
+            "Um número misto é a soma de uma parte inteira e uma parte fracionária.",
+            "Para converter um número misto em fração imprópria, multiplique o inteiro pelo denominador e some o numerador.",
+            "Para converter uma fração imprópria em número misto, divida o numerador pelo denominador.",
+            "Frações decimais têm denominadores como 10, 100, 1000, etc., e podem ser escritas como números decimais.",
+            "Para converter uma fração em decimal, divida o numerador pelo denominador.",
+            "Para converter um decimal em fração, use as casas decimais como denominador e simplifique.",
+            "Ao simplificar frações, divida o numerador e o denominador pelo máximo divisor comum (MDC).",
+            "Frações irredutíveis são aquelas que não podem mais ser simplificadas.",
+            "A razão entre duas quantidades pode ser expressa como uma fração.",
+            "Em problemas de proporção, as frações são usadas para representar a relação entre partes.",
+            "Em problemas de divisão proporcional, frações são usadas para distribuir quantidades.",
+            "Em probabilidade, frações são usadas para representar a chance de um evento ocorrer.",
+            "Em estatística, frações são usadas para representar partes de um todo em gráficos e tabelas.",
+            "Potenciação de frações: eleva-se tanto o numerador quanto o denominador à potência indicada.",
+            "Para comparar frações com denominadores diferentes, encontre um denominador comum e compare os numeradores.",
+            "Frações equivalentes podem ser encontradas multiplicando ou dividindo o numerador e o denominador pelo mesmo número.",
+            "A fração de um número natural é calculada multiplicando o número pelo numerador e dividindo pelo denominador.",
+            "Para somar ou subtrair frações com denominadores diferentes, encontre o MMC dos denominadores."
+        ];
+        
+        // Banco de questões sobre frações para o 6º ano
+        const questionBank = [
+            {
+                question: "O que representa o número 3 na fração 3/4?",
+                options: [
+                    "O denominador - em quantas partes o todo foi dividido",
+                    "O numerador - quantas partes estamos considerando",
+                    "O resultado da divisão",
+                    "O valor decimal da fração"
+                ],
+                answer: 1,
+                explanation: "Na fração 3/4, o número 3 é o numerador, que indica quantas partes do todo estamos considerando.",
+                tipIndex: 0
+            },
+            {
+                question: "Qual fração representa a parte colorida da figura? (imagine um círculo dividido em 8 partes iguais, com 3 partes coloridas)",
+                options: [
+                    "5/8",
+                    "3/8",
+                    "8/3",
+                    "3/5"
+                ],
+                answer: 1,
+                explanation: "Se um círculo é dividido em 8 partes iguais e 3 estão coloridas, a fração que representa a parte colorida é 3/8.",
+                tipIndex: 0
+            },
+            {
+                question: "Qual é a fração equivalente a 1/2?",
+                options: [
+                    "2/3",
+                    "3/6",
+                    "2/4",
+                    "3/5"
+                ],
+                answer: 2,
+                explanation: "1/2 é equivalente a 2/4, pois se multiplicarmos o numerador e o denominador por 2, obtemos 2/4.",
+                tipIndex: 1
+            },
+            {
+                question: "Como se lê a fração 5/8?",
+                options: [
+                    "Cinco oitavos",
+                    "Oito quintos",
+                    "Cinco sobre oito",
+                    "Oito sobre cinco"
+                ],
+                answer: 0,
+                explanation: "A fração 5/8 se lê 'cinco oitavos'. O denominador indica em quantas partes o todo foi dividido, e o numerador quantas partes estamos considerando.",
+                tipIndex: 0
+            },
+            {
+                question: "Qual é o resultado de 2/5 + 1/5?",
+                options: [
+                    "3/10",
+                    "3/5",
+                    "2/5",
+                    "1/5"
+                ],
+                answer: 1,
+                explanation: "Como os denominadores são iguais (5), mantemos o denominador e somamos os numeradores: 2 + 1 = 3. Resultado: 3/5.",
+                tipIndex: 3
+            },
+            {
+                question: "Quanto é 1/4 de 20?",
+                options: [
+                    "10",
+                    "5",
+                    "15",
+                    "4"
+                ],
+                answer: 1,
+                explanation: "Para calcular 1/4 de 20, dividimos 20 por 4: 20 ÷ 4 = 5.",
+                tipIndex: 6
+            },
+            {
+                question: "Qual fração é maior: 1/3 ou 1/2?",
+                options: [
+                    "1/3",
+                    "1/2",
+                    "São iguais",
+                    "Não é possível comparar"
+                ],
+                answer: 1,
+                explanation: "1/2 é maior que 1/3. Quando o numerador é igual, a fração com menor denominador é maior, pois as partes são maiores.",
+                tipIndex: 2
+            },
+            {
+                question: "Qual é a forma simplificada de 4/8?",
+                options: [
+                    "2/4",
+                    "1/2",
+                    "3/4",
+                    "2/8"
+                ],
+                answer: 1,
+                explanation: "Para simplificar 4/8, dividimos o numerador e o denominador por 4: 4÷4=1, 8÷4=2. Resultado: 1/2.",
+                tipIndex: 24
+            },
+            {
+                question: "Qual é o resultado de 3/4 - 1/4?",
+                options: [
+                    "2/4",
+                    "1/2",
+                    "2/0",
+                    "4/4"
+                ],
+                answer: 0,
+                explanation: "Como os denominadores são iguais (4), mantemos o denominador e subtraímos os numeradores: 3 - 1 = 2. Resultado: 2/4, que pode ser simplificado para 1/2.",
+                tipIndex: 3
+            },
+            {
+                question: "Se uma pizza é dividida em 8 pedaços iguais e João come 3 pedaços, que fração da pizza ele comeu?",
+                options: [
+                    "5/8",
+                    "3/8",
+                    "8/3",
+                    "3/5"
+                ],
+                answer: 1,
+                explanation: "Se a pizza tem 8 pedaços e João comeu 3, ele comeu 3/8 da pizza.",
+                tipIndex: 0
+            },
+            {
+                question: "Qual das seguintes frações é equivalente a 2/3?",
+                options: [
+                    "4/5",
+                    "6/9",
+                    "3/4",
+                    "5/6"
+                ],
+                answer: 1,
+                explanation: "2/3 é equivalente a 6/9, pois se multiplicarmos o numerador e o denominador por 3, obtemos 6/9.",
+                tipIndex: 1
+            },
+            {
+                question: "Como se representa o número misto 2 1/3 como fração imprópria?",
+                options: [
+                    "5/3",
+                    "7/3",
+                    "6/3",
+                    "4/3"
+                ],
+                answer: 1,
+                explanation: "Para converter 2 1/3 em fração imprópria, multiplicamos a parte inteira pelo denominador e somamos o numerador: (2 × 3) + 1 = 7. Mantemos o denominador 3. Resultado: 7/3.",
+                tipIndex: 17
+            },
+            {
+                question: "Qual é o resultado de 1/2 × 1/3?",
+                options: [
+                    "1/6",
+                    "2/5",
+                    "1/5",
+                    "2/6"
+                ],
+                answer: 0,
+                explanation: "Para multiplicar frações, multiplicamos os numeradores e os denominadores: (1 × 1)/(2 × 3) = 1/6.",
+                tipIndex: 4
+            },
+            {
+                question: "Qual fração representa 0,5?",
+                options: [
+                    "1/4",
+                    "1/2",
+                    "1/3",
+                    "2/3"
+                ],
+                answer: 1,
+                explanation: "0,5 é igual a 1/2, pois 1 dividido por 2 é 0,5.",
+                tipIndex: 21
+            },
+            {
+                question: "Qual é o resultado de 2/7 × 14?",
+                options: [
+                    "4",
+                    "28",
+                    "14",
+                    "7"
+                ],
+                answer: 0,
+                explanation: "2/7 × 14 = (2 × 14)/7 = 28/7 = 4.",
+                tipIndex: 6
+            },
+            {
+                question: "Se 1/3 dos alunos de uma sala são meninas e há 30 alunos no total, quantas são meninas?",
+                options: [
+                    "15",
+                    "10",
+                    "20",
+                    "5"
+                ],
+                answer: 1,
+                explanation: "Para calcular 1/3 de 30, dividimos 30 por 3: 30 ÷ 3 = 10 meninas.",
+                tipIndex: 6
+            },
+            {
+                question: "Qual é a fração irredutível de 6/9?",
+                options: [
+                    "2/3",
+                    "3/4",
+                    "1/3",
+                    "3/2"
+                ],
+                answer: 0,
+                explanation: "Para simplificar 6/9, dividimos o numerador e o denominador por 3: 6÷3=2, 9÷3=3. Resultado: 2/3.",
+                tipIndex: 24
+            },
+            {
+                question: "Qual é o resultado de 1/5 + 2/5?",
+                options: [
+                    "3/10",
+                    "3/5",
+                    "2/5",
+                    "1/5"
+                ],
+                answer: 1,
+                explanation: "Como os denominadores são iguais (5), mantemos o denominador e somamos os numeradores: 1 + 2 = 3. Resultado: 3/5.",
+                tipIndex: 3
+            },
+            {
+                question: "Qual das seguintes frações é a menor?",
+                options: [
+                    "1/2",
+                    "1/3",
+                    "1/4",
+                    "1/5"
+                ],
+                answer: 3,
+                explanation: "Quando o numerador é igual, a fração com maior denominador é a menor, pois as partes são menores. Portanto, 1/5 é a menor.",
+                tipIndex: 2
+            },
+            {
+                question: "Quanto é 3/4 de 100?",
+                options: [
+                    "50",
+                    "25",
+                    "75",
+                    "100"
+                ],
+                answer: 2,
+                explanation: "Para calcular 3/4 de 100, multiplicamos 100 por 3 e dividimos por 4: (100 × 3) ÷ 4 = 300 ÷ 4 = 75.",
+                tipIndex: 6
+            },
+            {
+                question: "Qual é o resultado de 1/2 ÷ 2?",
+                options: [
+                    "1/4",
+                    "1",
+                    "2/2",
+                    "4/1"
+                ],
+                answer: 0,
+                explanation: "Dividir por 2 é o mesmo que multiplicar por 1/2. Então, 1/2 ÷ 2 = 1/2 × 1/2 = 1/4.",
+                tipIndex: 5
+            },
+            {
+                question: "Se 2/5 de um número é 10, qual é esse número?",
+                options: [
+                    "20",
+                    "25",
+                    "15",
+                    "30"
+                ],
+                answer: 1,
+                explanation: "Se 2/5 do número é 10, então 1/5 é 5. Portanto, o número completo (5/5) é 5 × 5 = 25.",
+                tipIndex: 6
+            },
+            {
+                question: "Qual é o resultado de 1/3 + 1/6?",
+                options: [
+                    "2/9",
+                    "1/2",
+                    "2/6",
+                    "1/9"
+                ],
+                answer: 1,
+                explanation: "Para somar, encontramos um denominador comum (6). 1/3 = 2/6. Então: 2/6 + 1/6 = 3/6 = 1/2.",
+                tipIndex: 3
+            },
+            {
+                question: "Qual fração está entre 1/4 e 1/2?",
+                options: [
+                    "1/8",
+                    "3/4",
+                    "1/3",
+                    "3/8"
+                ],
+                answer: 3,
+                explanation: "1/4 = 0,25 e 1/2 = 0,5. 3/8 = 0,375, que está entre 0,25 e 0,5.",
+                tipIndex: 2
+            },
+            {
+                question: "Qual é o resultado de 4/5 - 2/5?",
+                options: [
+                    "2/5",
+                    "2/0",
+                    "6/5",
+                    "2/10"
+                ],
+                answer: 0,
+                explanation: "Como os denominadores são iguais (5), mantemos o denominador e subtraímos os numeradores: 4 - 2 = 2. Resultado: 2/5.",
+                tipIndex: 3
+            },
+            {
+                question: "Qual é a forma mista de 7/4?",
+                options: [
+                    "1 3/4",
+                    "2 1/4",
+                    "1 1/4",
+                    "3 1/4"
+                ],
+                answer: 0,
+                explanation: "7 ÷ 4 = 1 com resto 3, então 7/4 = 1 3/4.",
+                tipIndex: 18
+            },
+            {
+                question: "Qual é o recíproco de 3/4?",
+                options: [
+                    "4/3",
+                    "3/4",
+                    "4/4",
+                    "3/3"
+                ],
+                answer: 0,
+                explanation: "O recíproco de uma fração é invertendo numerador e denominador. O recíproco de 3/4 é 4/3.",
+                tipIndex: 5
+            },
+            {
+                question: "Qual é o resultado de 1/2 + 1/4 + 1/8?",
+                options: [
+                    "3/14",
+                    "7/8",
+                    "3/8",
+                    "5/8"
+                ],
+                answer: 1,
+                explanation: "Encontrando denominador comum (8): 1/2 = 4/8, 1/4 = 2/8, 1/8 = 1/8. Somando: 4/8 + 2/8 + 1/8 = 7/8.",
+                tipIndex: 3
+            },
+            {
+                question: "Qual fração representa a parte não colorida da figura? (imagine um retângulo dividido em 5 partes iguais, com 2 partes coloridas)",
+                options: [
+                    "2/5",
+                    "3/5",
+                    "5/2",
+                    "5/3"
+                ],
+                answer: 1,
+                explanation: "Se o retângulo tem 5 partes e 2 estão coloridas, então 3 partes não estão coloridas, ou seja, 3/5.",
+                tipIndex: 0
+            },
+            {
+                question: "Qual é o resultado de 2/3 × 6?",
+                options: [
+                    "12",
+                    "4",
+                    "8",
+                    "6"
+                ],
+                answer: 1,
+                explanation: "2/3 × 6 = (2 × 6)/3 = 12/3 = 4.",
+                tipIndex: 6
+            },
+            {
+                question: "Quanto é (1/2)²?",
+                options: [
+                    "1/4",
+                    "1/2",
+                    "1",
+                    "2/4"
+                ],
+                answer: 0,
+                explanation: "(1/2)² = (1²)/(2²) = 1/4.",
+                tipIndex: 29
+            },
+            {
+                question: "Qual é o resultado de (2/3)³?",
+                options: [
+                    "8/27",
+                    "6/9",
+                    "4/9",
+                    "2/27"
+                ],
+                answer: 0,
+                explanation: "(2/3)³ = (2³)/(3³) = 8/27.",
+                tipIndex: 29
+            },
+            {
+                question: "Qual é o resultado de (3/4)²?",
+                options: [
+                    "9/16",
+                    "3/8",
+                    "6/8",
+                    "3/16"
+                ],
+                answer: 0,
+                explanation: "(3/4)² = (3²)/(4²) = 9/16.",
+                tipIndex: 29
+            },
+            {
+                question: "Qual é o resultado de (1/3)³?",
+                options: [
+                    "1/27",
+                    "1/9",
+                    "3/9",
+                    "3/27"
+                ],
+                answer: 0,
+                explanation: "(1/3)³ = (1³)/(3³) = 1/27.",
+                tipIndex: 29
+            },
+            {
+                question: "Qual é o resultado de (2/5)²?",
+                options: [
+                    "4/25",
+                    "2/10",
+                    "4/10",
+                    "2/25"
+                ],
+                answer: 0,
+                explanation: "(2/5)² = (2²)/(5²) = 4/25.",
+                tipIndex: 29
+            },
+            {
+                question: "Qual é a fração equivalente a 3/5 com denominador 20?",
+                options: [
+                    "12/20",
+                    "6/20",
+                    "15/20",
+                    "3/20"
+                ],
+                answer: 0,
+                explanation: "Para obter denominador 20, multiplicamos o numerador e o denominador por 4: 3/5 = (3×4)/(5×4) = 12/20.",
+                tipIndex: 1
+            },
+            {
+                question: "Qual é a fração equivalente a 2/7 com denominador 21?",
+                options: [
+                    "6/21",
+                    "2/21",
+                    "14/21",
+                    "4/21"
+                ],
+                answer: 0,
+                explanation: "Para obter denominador 21, multiplicamos o numerador e o denominador por 3: 2/7 = (2×3)/(7×3) = 6/21.",
+                tipIndex: 1
+            }
+        ];
+        
+        // Inicializar o jogo
+        function initGame() {
+            // Embaralhar as questões
+            questions = [...questionBank];
+            shuffleArray(questions);
+            
+            // Garantir que temos pelo menos 30 questões
+            while (questions.length < 30) {
+                questions.push(...questionBank);
+            }
+            questions = questions.slice(0, 30);
+            
+            // Embaralhar as opções de cada questão
+            questions.forEach(q => {
+                // Salvar a resposta correta
+                const correctAnswer = q.options[q.answer];
+                
+                // Embaralhar as opções
+                shuffleArray(q.options);
+                
+                // Encontrar a nova posição da resposta correta
+                q.answer = q.options.indexOf(correctAnswer);
+            });
+            
+            currentQuestion = 0;
+            score = 0;
+            usedSkips = 0;
+            usedNotebook = 0;
+            usedTeacher = 0;
+            usedEliminate = 0;
+            eliminatedOptions = [];
+            
+            updateLifelinesDisplay();
+            updateScore();
+            loadQuestion();
+        }
+        
+        // Iniciar o jogo (mostrar tela do jogo)
+        function startGame() {
+            document.getElementById('welcome-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'block';
+            initGame();
+        }
+        
+        // Embaralhar array (algoritmo Fisher-Yates)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        // Carregar pergunta atual
+        function loadQuestion() {
+            if (currentQuestion >= questions.length) {
+                endGame(true);
+                return;
+            }
+            
+            const question = questions[currentQuestion];
+            document.getElementById('question').textContent = question.question;
+            
+            // Resetar opções eliminadas
+            eliminatedOptions = [];
+            
+            for (let i = 0; i < 4; i++) {
+                const optionElement = document.getElementById(`option${i}`);
+                optionElement.textContent = question.options[i];
+                optionElement.parentElement.classList.remove('eliminated');
+            }
+            
+            document.getElementById('question-number').textContent = currentQuestion + 1;
+            updateScore();
+            updateLifelinesDisplay();
+        }
+        
+        // Atualizar display das ajudas
+        function updateLifelinesDisplay() {
+            if (godMode) {
+                // No modo God, mostrar como ilimitado
+                document.getElementById('skip-count').textContent = `∞`;
+                document.getElementById('notebook-count').textContent = `∞`;
+                document.getElementById('teacher-count').textContent = `∞`;
+                document.getElementById('eliminate-count').textContent = `∞`;
+                
+                // Ativar todas as ajudas
+                document.querySelector('[onclick="useLifeline(\'skip\')"]').className = 'lifeline god-mode-active';
+                document.querySelector('[onclick="useLifeline(\'notebook\')"]').className = 'lifeline god-mode-active';
+                document.querySelector('[onclick="useLifeline(\'teacher\')"]').className = 'lifeline god-mode-active';
+                document.querySelector('[onclick="useLifeline(\'eliminate\')"]').className = 'lifeline god-mode-active';
+            } else {
+                // Modo normal
+                document.getElementById('skip-count').textContent = `${maxSkips - usedSkips}/${maxSkips}`;
+                document.getElementById('notebook-count').textContent = `${maxNotebook - usedNotebook}/${maxNotebook}`;
+                document.getElementById('teacher-count').textContent = `${maxTeacher - usedTeacher}/${maxTeacher}`;
+                document.getElementById('eliminate-count').textContent = `${maxEliminate - usedEliminate}/${maxEliminate}`;
+                
+                // Atualizar estados dos botões
+                document.querySelector('[onclick="useLifeline(\'skip\')"]').className = 
+                    usedSkips >= maxSkips ? 'lifeline disabled' : 'lifeline';
+                    
+                document.querySelector('[onclick="useLifeline(\'notebook\')"]').className = 
+                    usedNotebook >= maxNotebook ? 'lifeline disabled' : 'lifeline';
+                    
+                document.querySelector('[onclick="useLifeline(\'teacher\')"]').className = 
+                    usedTeacher >= maxTeacher ? 'lifeline disabled' : 'lifeline';
+                    
+                document.querySelector('[onclick="useLifeline(\'eliminate\')"]').className = 
+                    usedEliminate >= maxEliminate ? 'lifeline disabled' : 'lifeline';
+            }
+        }
+        
+        // Verificar resposta
+        function checkAnswer(selectedOption) {
+            if (godMode) {
+                showGodModeResult(selectedOption);
+                return;
+            }
+            
+            // Verificar se a opção foi eliminada
+            if (eliminatedOptions.includes(selectedOption)) {
+                alert("Esta alternativa foi eliminada! Escolha outra.");
+                return;
+            }
+            
+            const correctAnswer = questions[currentQuestion].answer;
+            
+            if (selectedOption === correctAnswer) {
+                // Resposta correta
+                score = prizes[currentQuestion];
+                currentQuestion++;
+                
+                if (currentQuestion >= questions.length) {
+                    endGame(true);
+                } else {
+                    showResult(true, "Resposta correta! Parabéns!");
+                }
+            } else {
+                // Resposta incorreta
+                showResult(false, `Resposta incorreta! A resposta correta era: ${String.fromCharCode(65 + correctAnswer)}) ${questions[currentQuestion].options[correctAnswer]}`);
+            }
+        }
+        
+        // Mostrar resultado
+        function showResult(isCorrect, message) {
+            document.getElementById('result-title').textContent = isCorrect ? "Correto!" : "Incorreto!";
+            document.getElementById('result-message').textContent = message;
+            
+            if (isCorrect) {
+                document.getElementById('result-button').textContent = "Próxima Pergunta";
+                document.getElementById('result-button').onclick = function() {
+                    closeModal('result-modal');
+                    loadQuestion();
+                };
+            } else {
+                document.getElementById('result-button').textContent = "Fim de Jogo";
+                document.getElementById('result-button').onclick = function() {
+                    closeModal('result-modal');
+                    endGame(false);
+                };
+            }
+            
+            document.getElementById('result-modal').style.display = "flex";
+        }
+        
+        // Mostrar resultado no modo God
+        function showGodModeResult(selectedOption) {
+            const correctAnswer = questions[currentQuestion].answer;
+            let message = `Você selecionou: ${String.fromCharCode(65 + selectedOption)}) ${questions[currentQuestion].options[selectedOption]}`;
+            message += `\nResposta correta: ${String.fromCharCode(65 + correctAnswer)}) ${questions[currentQuestion].options[correctAnswer]}`;
+            message += `\n\nExplicação: ${questions[currentQuestion].explanation}`;
+            
+            document.getElementById('result-title').textContent = "Modo God - Verificação";
+            document.getElementById('result-message').textContent = message;
+            document.getElementById('result-button').textContent = "Próxima Pergunta";
+            document.getElementById('result-button').onclick = function() {
+                closeModal('result-modal');
+                currentQuestion++;
+                if (currentQuestion >= questions.length) {
+                    endGame(true);
+                } else {
+                    loadQuestion();
+                }
+            };
+            
+            document.getElementById('result-modal').style.display = "flex";
+        }
+        
+        // Usar ajuda (pular, caderno, professor, eliminar)
+        function useLifeline(type) {
+            if (!godMode) {
+                // Verificar limites no modo normal
+                switch(type) {
+                    case 'skip':
+                        if (usedSkips >= maxSkips) {
+                            alert("Você já usou todos os pulos disponíveis!");
+                            return;
+                        }
+                        usedSkips++;
+                        break;
+                        
+                    case 'notebook':
+                        if (usedNotebook >= maxNotebook) {
+                            alert("Você já usou todas as consultas ao caderno!");
+                            return;
+                        }
+                        usedNotebook++;
+                        break;
+                        
+                    case 'teacher':
+                        if (usedTeacher >= maxTeacher) {
+                            alert("Você já usou toda a ajuda do professor!");
+                            return;
+                        }
+                        usedTeacher++;
+                        break;
+                        
+                    case 'eliminate':
+                        if (usedEliminate >= maxEliminate) {
+                            alert("Você já usou todas as eliminações de alternativas!");
+                            return;
+                        }
+                        usedEliminate++;
+                        break;
+                }
+            }
+            
+            // Executar a ajuda
+            switch(type) {
+                case 'skip':
+                    currentQuestion++;
+                    if (currentQuestion >= questions.length) {
+                        endGame(true);
+                    } else {
+                        loadQuestion();
+                    }
+                    break;
+                    
+                case 'notebook':
+                    const tipIndex = questions[currentQuestion].tipIndex;
+                    document.getElementById('notebook-tip').textContent = notebookTips[tipIndex];
+                    document.getElementById('notebook-modal').style.display = "flex";
+                    break;
+                    
+                case 'teacher':
+                    document.getElementById('teacher-explanation').textContent = 
+                        `Momento do professor ajudar: ${questions[currentQuestion].explanation}`;
+                    document.getElementById('teacher-modal').style.display = "flex";
+                    break;
+                    
+                case 'eliminate':
+                    // Decidir aleatoriamente quantas opções eliminar (1 ou 2)
+                    const optionsToEliminate = Math.random() < 0.5 ? 1 : 2;
+                    
+                    // Não eliminar a resposta correta
+                    const correctAnswer = questions[currentQuestion].answer;
+                    let possibleOptions = [0, 1, 2, 3].filter(opt => 
+                        opt !== correctAnswer && !eliminatedOptions.includes(opt));
+                    
+                    // Embaralhar as opções possíveis
+                    shuffleArray(possibleOptions);
+                    
+                    // Eliminar as opções selecionadas
+                    for (let i = 0; i < Math.min(optionsToEliminate, possibleOptions.length); i++) {
+                        const optionToEliminate = possibleOptions[i];
+                        eliminatedOptions.push(optionToEliminate);
+                        document.getElementById(`option${optionToEliminate}`).parentElement.classList.add('eliminated');
+                    }
+                    break;
+            }
+            
+            updateLifelinesDisplay();
+        }
+        
+        // Desistir do jogo
+        function surrender() {
+            if (confirm("Tem certeza que deseja desistir?")) {
+                endGame(false);
+            }
+        }
+        
+        // Finalizar o jogo
+        function endGame(isWin) {
+            let message = isWin ? 
+                `Parabéns! Você ganhou R$ ${score.toLocaleString('pt-BR')}!` : 
+                `Game Over! Você levou para casa R$ ${score.toLocaleString('pt-BR')}.`;
+            
+            document.getElementById('result-title').textContent = isWin ? "Vitória!" : "Fim de Jogo";
+            document.getElementById('result-message').textContent = message;
+            document.getElementById('result-button').textContent = "Voltar ao Início";
+            document.getElementById('result-button').onclick = function() {
+                closeModal('result-modal');
+                document.getElementById('game-screen').style.display = 'none';
+                document.getElementById('welcome-screen').style.display = 'block';
+            };
+            
+            document.getElementById('result-modal').style.display = "flex";
+        }
+        
+        // Atualizar placar
+        function updateScore() {
+            document.getElementById('current-prize').textContent = score.toLocaleString('pt-BR');
+        }
+        
+        // Fechar modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+        
+        // Alternar modo God
+        function toggleGodMode() {
+            godMode = !godMode;
+            const godModeBtn = document.getElementById('god-mode-btn');
+            
+            if (godMode) {
+                godModeBtn.textContent = "God Mode Ativo";
+                godModeBtn.classList.add('god-mode-active');
+                alert("Modo God ativado! Agora você pode usar todas as ajudas sem limites.");
+            } else {
+                godModeBtn.textContent = "God Mode";
+                godModeBtn.classList.remove('god-mode-active');
+                alert("Modo God desativado. As ajudas agora têm limites normais.");
+            }
+            
+            updateLifelinesDisplay();
+        }
+    </script>
+</body>
+</html>
